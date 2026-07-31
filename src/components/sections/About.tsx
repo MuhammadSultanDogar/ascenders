@@ -25,13 +25,13 @@ export default function About() {
 
       gsap.utils.toArray<HTMLElement>(".timeline-item").forEach((item, i) => {
         gsap.from(item, {
-          x: i % 2 === 0 ? -60 : 60,
+          y: 36,
           opacity: 0,
           duration: 1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: item,
-            start: "top 80%",
+            start: "top 85%",
             toggleActions: "play none none reverse",
           },
         });
@@ -42,7 +42,7 @@ export default function About() {
           ease: "back.out(2)",
           scrollTrigger: {
             trigger: item,
-            start: "top 75%",
+            start: "top 80%",
           },
         });
       });

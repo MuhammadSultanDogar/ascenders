@@ -43,17 +43,15 @@ export default function Contact() {
         },
       });
 
-      gsap.matchMedia().add("(min-width: 768px)", () => {
-        gsap.from(".contact-form", {
-          x: 40,
-          opacity: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 65%",
-          },
-        });
+      gsap.from(".contact-form", {
+        y: 48,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+        },
       });
     },
     { scope: sectionRef },

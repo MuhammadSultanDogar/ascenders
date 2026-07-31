@@ -22,10 +22,9 @@ export default function Services() {
       registerGSAP();
 
       const mm = gsap.matchMedia();
+      const panels = gsap.utils.toArray<HTMLElement>(".service-panel");
 
       mm.add("(min-width: 1024px)", () => {
-        const panels = gsap.utils.toArray<HTMLElement>(".service-panel");
-
         panels.forEach((panel, i) => {
           if (i === panels.length - 1) return;
 
@@ -42,34 +41,42 @@ export default function Services() {
         });
       });
 
-      mm.add("(min-width: 768px)", () => {
-        const panels = gsap.utils.toArray<HTMLElement>(".service-panel");
+      panels.forEach((panel) => {
+        gsap.from(panel.querySelectorAll(".service-headline-line"), {
+          y: "100%",
+          stagger: 0.08,
+          duration: 1,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: panel,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        });
 
-        panels.forEach((panel) => {
-          gsap.from(panel.querySelectorAll(".service-headline-line"), {
-            y: "100%",
-            stagger: 0.08,
-            duration: 1,
-            ease: "power4.out",
-            scrollTrigger: {
-              trigger: panel,
-              start: "top 80%",
-              toggleActions: "play none none reverse",
-            },
-          });
+        gsap.from(panel.querySelectorAll(".service-scene-wrap"), {
+          y: 48,
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: panel,
+            start: "top 82%",
+            toggleActions: "play none none reverse",
+          },
+        });
 
-          gsap.from(panel.querySelectorAll(".service-item"), {
-            x: -30,
-            opacity: 0,
-            stagger: 0.06,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: panel,
-              start: "top 75%",
-              toggleActions: "play none none reverse",
-            },
-          });
+        gsap.from(panel.querySelectorAll(".service-item"), {
+          x: -24,
+          opacity: 0,
+          stagger: 0.06,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: panel,
+            start: "top 78%",
+            toggleActions: "play none none reverse",
+          },
         });
       });
 
@@ -127,7 +134,7 @@ export default function Services() {
               </div>
             </div>
 
-            <div className="relative z-10 w-full lg:col-span-6">
+            <div className="service-scene-wrap relative z-10 w-full lg:col-span-6">
               <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06] sm:rounded-3xl">
                 <ServiceScene serviceId={service.id} />
               </div>

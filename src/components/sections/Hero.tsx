@@ -32,6 +32,19 @@ export default function Hero() {
 
       const mm = gsap.matchMedia();
 
+      mm.add("(max-width: 1023px)", () => {
+        gsap.to(".hero-content", {
+          y: -36,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.8,
+          },
+        });
+      });
+
       mm.add("(min-width: 1024px)", () => {
         gsap.to(".hero-bg-text", {
           xPercent: -15,
@@ -73,15 +86,15 @@ export default function Hero() {
   );
 
   useEffect(() => {
-    if (window.matchMedia("(min-width: 1024px)").matches) {
-      gsap.to(".hero-globe-float", {
-        y: "+=10",
-        duration: 4,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-    }
+    if (!sectionRef.current?.querySelector(".hero-globe-wrap")) return;
+
+    gsap.to(".hero-globe-float", {
+      y: "+=10",
+      duration: 4,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
   }, []);
 
   return (
@@ -158,7 +171,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="absolute bottom-6 left-6 z-10 hidden flex-col items-start gap-3 lg:flex lg:left-12 lg:bottom-10">
+        <div className="absolute bottom-6 left-6 z-10 flex flex-col items-start gap-3 lg:left-12 lg:bottom-10">
           <span className="text-[10px] tracking-[0.3em] text-black/35 uppercase">
             Scroll to explore
           </span>

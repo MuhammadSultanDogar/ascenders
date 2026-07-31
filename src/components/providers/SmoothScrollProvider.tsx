@@ -4,16 +4,9 @@ import { useRef, useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger, registerGSAP } from "@/lib/gsap";
 
-function usePrefersReducedMotion() {
+function prefersReducedMotion() {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function shouldUseSmoothScroll() {
-  if (typeof window === "undefined") return false;
-  const coarse = window.matchMedia("(pointer: coarse)").matches;
-  const narrow = window.innerWidth < 1024;
-  return !coarse && !narrow && !usePrefersReducedMotion();
 }
 
 export default function SmoothScrollProvider({
@@ -26,16 +19,19 @@ export default function SmoothScrollProvider({
   useEffect(() => {
     registerGSAP();
 
-    if (!shouldUseSmoothScroll()) {
+    if (prefersReducedMotion()) {
       ScrollTrigger.refresh();
       return;
     }
 
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+
     const lenis = new Lenis({
-      duration: 1.05,
+      duration: isTouch ? 0.85 : 1.05,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1,
+      syncTouch: isTouch,
+      touchMultiplier: 1.4,
       wheelMultiplier: 0.9,
     });
 

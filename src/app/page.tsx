@@ -10,6 +10,7 @@ import Contact from "@/components/sections/Contact";
 import MarketsStrip from "@/components/sections/MarketsStrip";
 import PartnersStrip from "@/components/sections/PartnersStrip";
 import Footer from "@/components/layout/Footer";
+import DesignCredit from "@/components/layout/DesignCredit";
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+      <DesignCredit />
     </SmoothScrollProvider>
   );
 }
