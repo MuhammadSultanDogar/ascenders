@@ -29,8 +29,7 @@ export const PARTNER_BRANDS = [
 export const COMPANY = {
   name: "Ascenders IT Solutions LLC",
   tagline: "Digitally Advancing Sustainability",
-  email: "info@eascenders.com",
-  contactEmail: "business@eascenders.com",
+  email: "business@eascenders.com",
   phone: "1-561-730-9092",
   phoneHref: "tel:+15617309092",
   whatsappHref: "https://wa.me/923007337822",

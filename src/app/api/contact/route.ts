@@ -32,60 +32,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
     }
 
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      console.error("RESEND_API_KEY is not configured");
-      return NextResponse.json(
-        { error: "Email service is not configured yet. Please email us directly." },
-        { status: 503 },
-      );
-    }
-
     const serviceLabel = service ? (SERVICE_LABELS[service] ?? service) : "Not specified";
-    const from =
-      process.env.CONTACT_FROM_EMAIL ?? "Ascenders Website <onboarding@resend.dev>";
+    const subject = `[Ascenders] New inquiry from ${name}`;
+    const fullMessage = [`Service: ${serviceLabel}`, "", message].join("\n");
 
-    const text = [
-      `New contact form submission from eascenders.com`,
-      ``,
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Service: ${serviceLabel}`,
-      ``,
-      `Message:`,
-      message,
-    ].join("\n");
-
-    const html = `
-      <h2>New contact form submission</h2>
-      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-      <p><strong>Service:</strong> ${escapeHtml(serviceLabel)}</p>
-      <p><strong>Message:</strong></p>
-      <p>${escapeHtml(message).replace(/\n/g, "<br />")}</p>
-    `;
-
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to: [CONTACT_TO],
-        reply_to: email,
-        subject: `[Ascenders] New inquiry from ${name}`,
-        text,
-        html,
-      }),
-    });
-
-    if (!res.ok) {
-      const err = await res.text();
-      console.error("Resend API error:", err);
-      return NextResponse.json({ error: "Failed to send your message. Please try again." }, { status: 502 });
+    const web3formsKey = process.env.WEB3FORMS_ACCESS_KEY;
+    if (web3formsKey) {
+      const sent = await sendViaWeb3Forms({
+        accessKey: web3formsKey,
+        name,
+        email,
+        subject,
+        message: fullMessage,
+        serviceLabel,
+      });
+      if (!sent.ok) return sent.response;
+      return NextResponse.json({ success: true });
     }
+
+    const sent = await sendViaFormSubmit({
+      name,
+      email,
+      subject,
+      message: fullMessage,
+    });
+    if (!sent.ok) return sent.response;
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -94,11 +65,96 @@ export async function POST(request: Request) {
   }
 }
 
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+async function sendViaFormSubmit({
+  name,
+  email,
+  subject,
+  message,
+}: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}) {
+  const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_TO)}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      _replyto: email,
+      _subject: subject,
+      message,
+      _captcha: "false",
+      _template: "table",
+    }),
+  });
+
+  let data: { success?: string; message?: string } = {};
+  try {
+    data = (await res.json()) as { success?: string; message?: string };
+  } catch {
+    // FormSubmit occasionally returns non-JSON on edge cases
+  }
+
+  if (!res.ok) {
+    console.error("FormSubmit error:", data);
+    return {
+      ok: false as const,
+      response: NextResponse.json(
+        { error: "Failed to send your message. Please try again or email business@eascenders.com." },
+        { status: 502 },
+      ),
+    };
+  }
+
+  return { ok: true as const };
+}
+
+async function sendViaWeb3Forms({
+  accessKey,
+  name,
+  email,
+  subject,
+  message,
+  serviceLabel,
+}: {
+  accessKey: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  serviceLabel: string;
+}) {
+  const res = await fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      access_key: accessKey,
+      subject,
+      from_name: name,
+      email,
+      replyto: email,
+      message,
+      service: serviceLabel,
+    }),
+  });
+
+  const data = (await res.json()) as { success?: boolean; message?: string };
+
+  if (!res.ok || !data.success) {
+    console.error("Web3Forms API error:", data);
+    return {
+      ok: false as const,
+      response: NextResponse.json(
+        { error: "Failed to send your message. Please try again or email business@eascenders.com." },
+        { status: 502 },
+      ),
+    };
+  }
+
+  return { ok: true as const };
 }

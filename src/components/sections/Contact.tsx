@@ -131,14 +131,6 @@ export default function Contact() {
               <IconMail className="h-5 w-5 shrink-0 text-accent" />
               <span className="text-base md:text-lg">{COMPANY.email}</span>
             </a>
-            <a
-              href={`mailto:${COMPANY.contactEmail}`}
-              data-cursor="hover"
-              className="group flex items-center gap-4 text-black/55 transition-colors hover:text-black"
-            >
-              <IconMail className="h-5 w-5 shrink-0 text-accent" />
-              <span className="text-base md:text-lg">{COMPANY.contactEmail}</span>
-            </a>
           </div>
 
           <div className="mt-8 flex gap-3 md:mt-10 md:gap-4">
@@ -167,7 +159,7 @@ export default function Contact() {
               <span className="font-display text-4xl font-bold text-accent">✓</span>
               <p className="mt-4 font-display text-xl font-semibold text-black sm:text-2xl">Message Sent</p>
               <p className="mt-2 text-sm text-black/45 sm:text-base">
-                We&apos;ll be in touch shortly at {COMPANY.contactEmail}.
+                We&apos;ll be in touch shortly at {COMPANY.email}.
               </p>
             </div>
           ) : (
