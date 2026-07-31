@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 const CONTACT_TO = process.env.CONTACT_TO_EMAIL ?? "business@eascenders.com";
+const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL ?? "https://eascenders.com";
 
 type ContactPayload = {
   name?: string;
@@ -36,6 +37,8 @@ export async function POST(request: Request) {
     const subject = `[Ascenders] New inquiry from ${name}`;
     const fullMessage = [`Service: ${serviceLabel}`, "", message].join("\n");
 
+    const origin = request.headers.get("origin") ?? SITE_ORIGIN;
+
     const web3formsKey = process.env.WEB3FORMS_ACCESS_KEY;
     if (web3formsKey) {
       const sent = await sendViaWeb3Forms({
@@ -55,6 +58,7 @@ export async function POST(request: Request) {
       email,
       subject,
       message: fullMessage,
+      origin,
     });
     if (!sent.ok) return sent.response;
 
@@ -70,17 +74,21 @@ async function sendViaFormSubmit({
   email,
   subject,
   message,
+  origin,
 }: {
   name: string;
   email: string;
   subject: string;
   message: string;
+  origin: string;
 }) {
   const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_TO)}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
+      Referer: `${origin}/contact`,
+      Origin: origin,
     },
     body: JSON.stringify({
       name,
@@ -97,15 +105,40 @@ async function sendViaFormSubmit({
   try {
     data = (await res.json()) as { success?: string; message?: string };
   } catch {
-    // FormSubmit occasionally returns non-JSON on edge cases
-  }
-
-  if (!res.ok) {
-    console.error("FormSubmit error:", data);
+    console.error("FormSubmit returned non-JSON response");
     return {
       ok: false as const,
       response: NextResponse.json(
-        { error: "Failed to send your message. Please try again or email business@eascenders.com." },
+        { error: "Email service returned an unexpected response. Please try again." },
+        { status: 502 },
+      ),
+    };
+  }
+
+  if (data.success !== "true") {
+    const providerMessage = data.message ?? "Unable to send email.";
+    console.error("FormSubmit rejected submission:", providerMessage);
+
+    const needsActivation =
+      /activ/i.test(providerMessage) || /verify/i.test(providerMessage);
+
+    if (needsActivation) {
+      return {
+        ok: false as const,
+        response: NextResponse.json(
+          {
+            error: `Form delivery is not active yet. Check the inbox for ${CONTACT_TO} (and spam) for an email from FormSubmit titled "Activate Form" — click that link once, then submit again.`,
+            needsActivation: true,
+          },
+          { status: 503 },
+        ),
+      };
+    }
+
+    return {
+      ok: false as const,
+      response: NextResponse.json(
+        { error: providerMessage },
         { status: 502 },
       ),
     };

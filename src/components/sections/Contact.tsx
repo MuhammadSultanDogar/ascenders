@@ -79,7 +79,7 @@ export default function Contact() {
         body: JSON.stringify(form),
       });
 
-      const data = (await res.json()) as { error?: string };
+      const data = (await res.json()) as { error?: string; needsActivation?: boolean };
 
       if (!res.ok) {
         setError(data.error ?? "Failed to send message. Please try again.");
@@ -244,7 +244,7 @@ export default function Contact() {
               </div>
 
               {error && (
-                <p className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <p className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-900">
                   {error}
                 </p>
               )}
