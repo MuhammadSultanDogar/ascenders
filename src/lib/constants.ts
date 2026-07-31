@@ -33,6 +33,15 @@ export const COMPANY = {
   phone: "1-561-730-9092",
   phoneHref: "tel:+15617309092",
   whatsappHref: "https://wa.me/923007337822",
+  office: {
+    label: "Model Town, Multan, Pakistan",
+    lat: 30.2442649,
+    lng: 71.4996891,
+    mapsUrl:
+      "https://www.google.com/maps/place/Model+Town,+Multan,+Pakistan/@30.244956,71.4952088,19.68z",
+    embedUrl:
+      "https://maps.google.com/maps?q=30.2442649,71.4996891&hl=en&z=17&output=embed",
+  },
 } as const;
 
 export const SITE = {

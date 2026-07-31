@@ -257,11 +257,12 @@ export default function Contact() {
 
           <div className="mt-6 overflow-hidden rounded-2xl border border-black/8 sm:mt-8">
             <iframe
-              title="Ascenders Office Location"
-              src="https://maps.google.com/maps?q=Florida%20USA&t=&z=11&ie=UTF8&iwloc=&output=embed"
+              title={`Ascenders office — ${COMPANY.office.label}`}
+              src={COMPANY.office.embedUrl}
               className="h-40 w-full border-0 opacity-80 sm:h-48 md:h-56"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
             />
           </div>
         </div>
