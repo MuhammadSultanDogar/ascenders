@@ -63,14 +63,16 @@ export default function Navbar() {
       <nav
         ref={navRef}
         className={cn(
-          "fixed top-6 left-1/2 z-50 w-[calc(100%-2rem)] -translate-x-1/2 transition-all duration-700 lg:w-auto",
+          "fixed top-4 left-1/2 z-50 -translate-x-1/2 transition-all duration-700",
+          "w-[calc(100%-1.5rem)] sm:top-6 sm:w-[calc(100%-2rem)]",
+          "md:w-max md:max-w-none",
           visible ? "translate-y-0 opacity-100" : "-translate-y-8 opacity-0",
           scrolled ? "top-4 scale-[0.96]" : "top-6 scale-100",
         )}
       >
         <div
           className={cn(
-            "glass flex items-center justify-between gap-1 rounded-full px-2 py-2 md:gap-1 md:px-2.5",
+            "glass flex w-full flex-nowrap items-center rounded-full py-2 pl-2 pr-2.5 sm:pl-2.5 sm:pr-3 md:w-max md:gap-0.5 md:px-3",
             scrolled && "shadow-lg shadow-black/8",
           )}
         >
@@ -88,13 +90,13 @@ export default function Navbar() {
             />
           </a>
 
-          <div className="hidden shrink-0 flex-nowrap items-center md:flex">
+          <div className="hidden shrink-0 items-center md:flex">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 data-cursor="hover"
-                className="group relative whitespace-nowrap px-2.5 py-2 text-[11px] font-medium tracking-[0.18em] uppercase lg:px-3.5 lg:text-xs lg:tracking-widest"
+                className="group relative whitespace-nowrap px-2 py-2 text-[11px] font-medium tracking-[0.16em] uppercase lg:px-3 lg:text-xs lg:tracking-widest"
               >
                 <span
                   className={cn(
@@ -106,7 +108,7 @@ export default function Navbar() {
                 </span>
                 <span
                   className={cn(
-                    "absolute bottom-1 left-2.5 right-2.5 h-px origin-left bg-accent transition-transform duration-500 lg:left-3.5 lg:right-3.5",
+                    "absolute bottom-1 left-2 right-2 h-px origin-left bg-accent transition-transform duration-500 lg:left-3 lg:right-3",
                     active === link.href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
                   )}
                 />
@@ -114,11 +116,11 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 pl-1 md:ml-0 md:pl-0">
             <a
               href="#contact"
               data-cursor="hover"
-              className="hidden rounded-full bg-accent px-5 py-2 text-xs font-semibold tracking-widest text-black uppercase transition-colors hover:bg-black hover:text-white md:inline-flex"
+              className="hidden shrink-0 rounded-full bg-accent px-4 py-2 text-[11px] font-semibold tracking-widest text-black uppercase transition-colors hover:bg-black hover:text-white md:inline-flex lg:px-5 lg:text-xs"
             >
               Start
             </a>

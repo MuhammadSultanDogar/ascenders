@@ -10,9 +10,9 @@ import SectionDecor from "@/components/ui/SectionDecor";
 
 const EcommerceGlobe = dynamic(() => import("@/components/sections/visuals/EcommerceGlobe"), {
   ssr: false,
-    loading: () => (
-      <div className="h-[min(260px,42vw)] w-[min(260px,42vw)] animate-pulse rounded-full bg-black/[0.04] sm:h-[min(320px,48vw)] sm:w-[min(320px,48vw)] lg:h-[min(380px,52vh)] lg:w-[min(380px,52vh)]" />
-    ),
+  loading: () => (
+    <div className="hidden h-[min(380px,52vh)] w-[min(380px,52vh)] animate-pulse rounded-full bg-black/[0.04] lg:block" />
+  ),
 });
 
 export default function Hero() {
@@ -30,71 +30,79 @@ export default function Hero() {
         .from(".hero-cta", { opacity: 0, y: 20, duration: 0.8 }, "-=0.5")
         .from(".hero-globe-wrap", { opacity: 0, scale: 0.88, y: 30, duration: 1.2 }, "-=0.9");
 
-      gsap.to(".hero-bg-text", {
-        xPercent: -15,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.2,
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 1024px)", () => {
+        gsap.to(".hero-bg-text", {
+          xPercent: -15,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1.2,
+          },
+        });
+
+        gsap.to(".hero-content", {
+          yPercent: -12,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+
+        gsap.to(".hero-globe-wrap", {
+          y: -50,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1.2,
+          },
+        });
       });
 
-      gsap.to(".hero-content", {
-        yPercent: -12,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-
-      gsap.to(".hero-globe-wrap", {
-        y: -50,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.2,
-        },
-      });
+      return () => mm.revert();
     },
     { scope: sectionRef },
   );
 
   useEffect(() => {
-    gsap.to(".hero-globe-float", {
-      y: "+=10",
-      duration: 4,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
+    if (window.matchMedia("(min-width: 1024px)").matches) {
+      gsap.to(".hero-globe-float", {
+        y: "+=10",
+        duration: 4,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+    }
   }, []);
 
   return (
     <section
       id="home"
       ref={sectionRef}
-      className="hero-bg relative flex min-h-[110vh] flex-col overflow-hidden bg-bg"
+      className="hero-bg relative min-h-[100svh] overflow-x-clip bg-bg lg:min-h-[110vh]"
     >
-      <div className="relative isolate flex min-h-[100svh] flex-col justify-center overflow-hidden py-20 lg:sticky lg:top-0 lg:h-screen lg:py-0">
+      <div className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-24 pb-16 lg:sticky lg:top-0 lg:h-screen lg:px-0 lg:pt-0 lg:pb-0">
         <SectionDecor variant="gold" showShape={false} />
 
-        <div className="pointer-events-none absolute top-0 right-0 h-full w-px bg-gradient-to-b from-transparent via-accent/30 to-transparent" aria-hidden="true" />
+        <div className="pointer-events-none absolute top-0 right-0 hidden h-full w-px bg-gradient-to-b from-transparent via-accent/30 to-transparent lg:block" aria-hidden="true" />
         <div className="pointer-events-none absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-accent/40 via-[#0467DF]/20 to-[#833AB4]/30" aria-hidden="true" />
 
-        <div className="hero-bg-text pointer-events-none absolute inset-0 z-0 flex items-center">
+        <div className="hero-bg-text pointer-events-none absolute inset-0 z-0 hidden items-center lg:flex">
           <span className="whitespace-nowrap font-display text-[18vw] font-bold tracking-normal text-black/[0.03] select-none">
             ASCENDERS ASCENDERS
           </span>
         </div>
 
-        <div className="hero-content relative z-10 mx-auto flex w-full max-w-7xl flex-col items-start justify-center gap-8 px-6 md:gap-10 md:px-12 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="hero-content relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:px-12">
           <div className="w-full max-w-3xl">
             <div className="hero-logo mb-6 md:mb-10">
               <Image
@@ -103,21 +111,21 @@ export default function Hero() {
                 width={LOGO.width}
                 height={LOGO.height}
                 priority
-                className="h-auto w-32 sm:w-40 md:w-52"
+                className="h-auto w-36 sm:w-40 md:w-52"
               />
             </div>
 
             <div className="hero-headline-wrap overflow-hidden text-left">
               {["WE BUILD", "DIGITAL", "GROWTH."].map((line) => (
                 <div key={line} className="overflow-hidden">
-                  <h1 className="hero-line headline-display text-[clamp(2rem,11vw,7rem)] uppercase">
+                  <h1 className="hero-line headline-display text-[clamp(2.25rem,10vw,7rem)] uppercase">
                     {line}
                   </h1>
                 </div>
               ))}
             </div>
 
-            <p className="hero-sub mt-6 max-w-xl text-left text-sm leading-relaxed tracking-wide text-black/55 md:mt-8 md:text-base">
+            <p className="hero-sub mt-5 max-w-xl text-left text-sm leading-relaxed tracking-wide text-black/55 sm:mt-6 md:mt-8 md:text-base">
               {COMPANY.tagline}. Premium ecommerce, marketing & automation for brands
               scaling across{" "}
               {MARKETS.map((m, i) => (
@@ -128,7 +136,7 @@ export default function Hero() {
               ))}
             </p>
 
-            <div className="hero-cta mt-8 flex flex-wrap items-center gap-3 md:mt-12 md:gap-4">
+            <div className="hero-cta mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center md:mt-12 md:gap-4">
               <MagneticButton href="#services" variant="primary">
                 Explore Services
               </MagneticButton>
@@ -143,14 +151,14 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="hero-globe-wrap relative z-10 mx-auto shrink-0 lg:mx-0 lg:block">
-            <div className="hero-globe-float scale-[0.85] sm:scale-100">
+          <div className="hero-globe-wrap relative z-10 hidden shrink-0 lg:block">
+            <div className="hero-globe-float">
               <EcommerceGlobe />
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-6 left-6 z-10 hidden flex-col items-start gap-3 sm:flex md:left-12 md:bottom-10">
+        <div className="absolute bottom-6 left-6 z-10 hidden flex-col items-start gap-3 lg:flex lg:left-12 lg:bottom-10">
           <span className="text-[10px] tracking-[0.3em] text-black/35 uppercase">
             Scroll to explore
           </span>

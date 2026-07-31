@@ -39,19 +39,21 @@ export default function Contact() {
         ease: "power4.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 65%",
+          start: "top 75%",
         },
       });
 
-      gsap.from(".contact-form", {
-        x: 60,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 60%",
-        },
+      gsap.matchMedia().add("(min-width: 768px)", () => {
+        gsap.from(".contact-form", {
+          x: 40,
+          opacity: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 65%",
+          },
+        });
       });
     },
     { scope: sectionRef },
@@ -97,7 +99,7 @@ export default function Contact() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-0 overflow-hidden bg-bg-subtle px-6 py-24 md:min-h-screen md:px-12 md:py-48"
+      className="relative overflow-x-clip bg-bg-subtle px-5 py-20 sm:px-6 sm:py-24 md:px-12 md:py-48"
     >
       <SectionDecor variant="blue" />
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-24">

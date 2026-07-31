@@ -38,18 +38,21 @@ export default function BrandLogo({
   const label = name ?? meta?.label ?? slug;
   const assetSlug = variant === "white" && slug === "linkedin" ? "linkedin-white" : slug;
   const isWide = !!meta?.wide;
+  const customSize = !!iconClassName;
 
   return (
     <div
       className={cn(
-        "flex items-center justify-center overflow-hidden",
-        uniform
-          ? isWide
-            ? "mx-auto h-8 w-full max-w-[4.5rem]"
-            : "h-10 w-10 shrink-0"
-          : isWide
-            ? "h-8 w-[5.5rem] shrink-0"
-            : "h-8 w-8 shrink-0",
+        "flex items-center justify-center",
+        !customSize &&
+          (uniform
+            ? isWide
+              ? "mx-auto h-8 w-full max-w-[4.5rem] overflow-hidden"
+              : "h-10 w-10 shrink-0 overflow-hidden"
+            : isWide
+              ? "h-8 w-[5.5rem] shrink-0 overflow-hidden"
+              : "h-8 w-8 shrink-0 overflow-hidden"),
+        customSize && "h-auto w-auto max-w-full",
         className,
       )}
     >
@@ -60,14 +63,15 @@ export default function BrandLogo({
         loading="lazy"
         className={cn(
           "block object-contain object-center",
-          uniform
-            ? isWide
-              ? "h-[1.125rem] w-full max-w-full"
-              : "h-7 w-7 md:h-8 md:w-8"
-            : isWide
-              ? "h-[1.125rem] w-full max-w-full"
-              : "h-7 w-7 md:h-8 md:w-8",
-          iconClassName,
+          customSize
+            ? iconClassName
+            : uniform
+              ? isWide
+                ? "h-[1.125rem] w-full max-w-full"
+                : "h-7 w-7 md:h-8 md:w-8"
+              : isWide
+                ? "h-[1.125rem] w-full max-w-full"
+                : "h-7 w-7 md:h-8 md:w-8",
         )}
       />
     </div>

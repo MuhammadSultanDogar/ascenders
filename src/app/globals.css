@@ -54,8 +54,21 @@ body {
   font-family: var(--font-body);
   background: var(--color-bg);
   color: var(--color-black);
-  overflow-x: hidden;
+  overflow-x: clip;
   cursor: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (max-width: 1023px) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .headline-display {
+    line-height: 1.08;
+    word-break: break-word;
+  }
 }
 
 @media (max-width: 768px) {
