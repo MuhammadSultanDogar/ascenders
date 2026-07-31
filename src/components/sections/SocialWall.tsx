@@ -95,7 +95,7 @@ export default function SocialWall() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-10 overflow-hidden bg-bg px-6 py-32 md:px-12 md:py-48"
+      className="relative z-10 overflow-hidden bg-bg px-6 py-24 md:px-12 md:py-48"
     >
       <SectionDecor variant="purple" />
 

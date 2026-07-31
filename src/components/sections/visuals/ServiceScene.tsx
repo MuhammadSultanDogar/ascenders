@@ -8,9 +8,9 @@ type ServiceSceneProps = {
 
 function SceneShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative flex h-full min-h-[420px] items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-white via-bg to-bg-subtle p-8">
+    <div className="relative flex h-full min-h-[240px] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-white via-bg to-bg-subtle p-4 sm:min-h-[320px] sm:rounded-3xl sm:p-6 md:min-h-[420px] md:p-8">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(201,162,39,0.08),transparent_50%)]" />
-      <div className="scene-3d relative z-10 h-[320px] w-full [perspective:900px]">
+      <div className="scene-3d relative z-10 h-[200px] w-full [perspective:900px] sm:h-[260px] md:h-[320px]">
         {children}
       </div>
     </div>
@@ -28,7 +28,7 @@ function MarketingScene() {
   return (
     <SceneShell>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="marketing-cube relative h-48 w-48 animate-[spin3d_18s_linear_infinite] [transform-style:preserve-3d]">
+        <div className="marketing-cube relative h-36 w-36 animate-[spin3d_18s_linear_infinite] [transform-style:preserve-3d] sm:h-44 sm:w-44 md:h-48 md:w-48">
           {faces.map((face) => (
             <div
               key={face.slug}
@@ -117,7 +117,7 @@ function ReinstatementScene() {
     <SceneShell>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative animate-[floatY_4s_ease-in-out_infinite]">
-          <div className="flex h-56 w-56 items-center justify-center rounded-[2rem] border border-black/8 bg-white shadow-2xl [transform:rotateX(12deg)_rotateY(-18deg)]">
+          <div className="flex h-44 w-44 items-center justify-center rounded-[1.5rem] border border-black/8 bg-white shadow-2xl [transform:rotateX(12deg)_rotateY(-18deg)] sm:h-52 sm:w-52 sm:rounded-[2rem] md:h-56 md:w-56">
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent/15">
                 <svg viewBox="0 0 24 24" className="h-10 w-10 text-accent" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -145,7 +145,7 @@ function AutomationScene() {
   return (
     <SceneShell>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="automation-stack relative h-56 w-full max-w-xs [transform-style:preserve-3d]">
+        <div className="automation-stack relative h-48 w-full max-w-[260px] [transform-style:preserve-3d] sm:h-56 sm:max-w-xs">
           {["Leads", "CRM", "AI Bots", "Convert"].map((step, i) => (
             <div
               key={step}

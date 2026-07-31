@@ -321,7 +321,7 @@ export default function EcommerceGlobe() {
   return (
     <div
       ref={wrapRef}
-      className="ecommerce-globe relative h-[min(380px,52vh)] w-[min(380px,52vh)]"
+      className="ecommerce-globe relative h-[min(260px,42vw)] w-[min(260px,42vw)] sm:h-[min(320px,48vw)] sm:w-[min(320px,48vw)] lg:h-[min(380px,52vh)] lg:w-[min(380px,52vh)]"
     >
       <div
         className="pointer-events-none absolute inset-[10%] rounded-full bg-[radial-gradient(circle,rgba(0,0,0,0.04)_0%,transparent_72%)]"

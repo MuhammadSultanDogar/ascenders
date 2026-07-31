@@ -12,6 +12,7 @@ type MagneticButtonProps = {
   type?: "button" | "submit";
   target?: string;
   rel?: string;
+  disabled?: boolean;
 };
 
 export default function MagneticButton({
@@ -23,6 +24,7 @@ export default function MagneticButton({
   type = "button",
   target,
   rel,
+  disabled = false,
 }: MagneticButtonProps) {
   const { ref, onMouseMove, onMouseLeave, onMouseEnter } = useMagnetic(0.3);
 
@@ -35,7 +37,7 @@ export default function MagneticButton({
     ghost: "text-black/60 hover:text-black",
   };
 
-  const classes = cn(base, variants[variant], className);
+  const classes = cn(base, variants[variant], disabled && "pointer-events-none opacity-60", className);
 
   if (href) {
     return (
@@ -59,6 +61,7 @@ export default function MagneticButton({
     <button
       ref={ref as React.RefObject<HTMLButtonElement>}
       type={type}
+      disabled={disabled}
       data-cursor="hover"
       className={classes}
       onClick={onClick}

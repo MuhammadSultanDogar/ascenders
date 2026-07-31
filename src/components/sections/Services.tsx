@@ -21,22 +21,28 @@ export default function Services() {
     () => {
       registerGSAP();
 
-      const panels = gsap.utils.toArray<HTMLElement>(".service-panel");
+      const mm = gsap.matchMedia();
 
-      panels.forEach((panel, i) => {
-        if (i === panels.length - 1) return;
+      mm.add("(min-width: 1024px)", () => {
+        const panels = gsap.utils.toArray<HTMLElement>(".service-panel");
 
-        gsap.to(panel, {
-          scale: 0.96,
-          opacity: 0.3,
-          scrollTrigger: {
-            trigger: panel,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
+        panels.forEach((panel, i) => {
+          if (i === panels.length - 1) return;
+
+          gsap.to(panel, {
+            scale: 0.96,
+            opacity: 0.3,
+            scrollTrigger: {
+              trigger: panel,
+              start: "top top",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
         });
       });
+
+      const panels = gsap.utils.toArray<HTMLElement>(".service-panel");
 
       panels.forEach((panel) => {
         gsap.from(panel.querySelectorAll(".service-headline-line"), {
@@ -46,7 +52,7 @@ export default function Services() {
           ease: "power4.out",
           scrollTrigger: {
             trigger: panel,
-            start: "top 60%",
+            start: "top 75%",
             toggleActions: "play none none reverse",
           },
         });
@@ -59,11 +65,13 @@ export default function Services() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: panel,
-            start: "top 50%",
+            start: "top 70%",
             toggleActions: "play none none reverse",
           },
         });
       });
+
+      return () => mm.revert();
     },
     { scope: sectionRef },
   );
@@ -73,52 +81,52 @@ export default function Services() {
       {SERVICES.map((service) => (
         <div
           key={service.id}
-          className="service-panel sticky top-0 flex min-h-screen items-center overflow-hidden bg-white"
+          className="service-panel relative flex min-h-0 items-start overflow-hidden bg-white py-16 pt-24 lg:sticky lg:top-0 lg:min-h-screen lg:items-center lg:py-24"
         >
           <SectionDecor variant={SERVICE_DECOR[service.id] ?? "gold"} showShape={service.id !== "ecommerce"} />
-          <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 px-6 py-24 md:px-12 lg:grid-cols-12 lg:gap-16">
-            <div className="relative z-10 lg:col-span-6">
-              <span className="font-display text-sm font-semibold tracking-[0.3em] text-accent uppercase">
+          <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-start gap-8 px-6 md:gap-10 md:px-12 lg:grid-cols-12 lg:items-center lg:gap-16">
+            <div className="relative z-10 order-2 lg:order-none lg:col-span-6">
+              <span className="font-display text-xs font-semibold tracking-[0.25em] text-accent uppercase sm:text-sm sm:tracking-[0.3em]">
                 {service.accent} — {service.title}
               </span>
 
-              <div className="mt-6 space-y-1">
+              <div className="mt-4 space-y-1 sm:mt-6">
                 {service.headline.map((line) => (
                   <div key={line} className="overflow-hidden">
-                    <h2 className="service-headline-line headline-display text-[clamp(2.25rem,7vw,5.5rem)] uppercase">
+                    <h2 className="service-headline-line headline-display text-[clamp(1.75rem,8vw,5.5rem)] uppercase">
                       {line}
                     </h2>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-8 max-w-xl text-base leading-relaxed text-black/55">
+              <p className="mt-5 max-w-xl text-sm leading-relaxed text-black/55 sm:mt-8 sm:text-base">
                 {service.description}
               </p>
 
               {service.items.length > 0 && (
-                <ul className="mt-10 space-y-3">
+                <ul className="mt-6 space-y-2.5 sm:mt-10 sm:space-y-3">
                   {service.items.map((item) => (
                     <li
                       key={item}
-                      className="service-item flex items-center gap-4 text-sm tracking-wide text-black/70"
+                      className="service-item flex items-center gap-3 text-sm tracking-wide text-black/70 sm:gap-4"
                     >
-                      <span className="h-px w-8 shrink-0 bg-accent" />
+                      <span className="h-px w-6 shrink-0 bg-accent sm:w-8" />
                       {item}
                     </li>
                   ))}
                 </ul>
               )}
 
-              <div className="mt-12">
+              <div className="mt-8 sm:mt-12">
                 <MagneticButton href="#contact" variant="outline">
                   Get Started
                 </MagneticButton>
               </div>
             </div>
 
-            <div className="relative z-10 lg:col-span-6">
-              <div className="glass overflow-hidden rounded-3xl ring-1 ring-black/[0.04]">
+            <div className="relative z-10 order-1 w-full lg:order-none lg:col-span-6">
+              <div className="glass overflow-hidden rounded-2xl ring-1 ring-black/[0.04] sm:rounded-3xl">
                 <ServiceScene serviceId={service.id} />
               </div>
             </div>

@@ -107,7 +107,7 @@ export default function Portfolio() {
     <section
       id="portfolio"
       ref={sectionRef}
-      className="relative overflow-hidden bg-bg-subtle px-6 py-32 md:px-12 md:py-48"
+      className="relative overflow-hidden bg-bg-subtle px-6 py-24 md:px-12 md:py-48"
     >
       <SectionDecor variant="coral" showShape={false} />
 

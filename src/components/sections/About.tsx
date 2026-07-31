@@ -67,7 +67,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative overflow-hidden bg-white px-6 py-32 md:px-12 md:py-48"
+      className="relative overflow-hidden bg-white px-6 py-24 md:px-12 md:py-48"
     >
       <SectionDecor variant="teal" />
       <div className="about-intro relative mx-auto max-w-7xl">
@@ -78,14 +78,14 @@ export default function About() {
         <div className="mt-6 max-w-4xl">
           {headline.map((word) => (
             <div key={word} className="overflow-hidden">
-              <h2 className="about-headline-word headline-display text-[clamp(2.25rem,7vw,5rem)] uppercase">
+              <h2 className="about-headline-word headline-display text-[clamp(1.75rem,8vw,5rem)] uppercase">
                 {word}
               </h2>
             </div>
           ))}
         </div>
 
-        <p className="mt-10 max-w-2xl text-lg leading-relaxed text-black/55">
+        <p className="mt-8 max-w-2xl text-base leading-relaxed text-black/55 md:mt-10 md:text-lg">
           Founded in 2015 in Multan, Pakistan, {COMPANY.name} has grown from a
           single vision into a global force — expanding into multiple ventures
           with offices across UAE, Lahore, and Multan, serving clients in the USA,
@@ -93,34 +93,36 @@ export default function About() {
         </p>
       </div>
 
-      <div className="timeline-track relative mx-auto mt-24 max-w-3xl [perspective:800px]">
-        <div className="absolute top-0 left-1/2 h-full w-px -translate-x-1/2 bg-black/10">
+      <div className="timeline-track relative mx-auto mt-16 max-w-3xl md:mt-24 [perspective:800px]">
+        <div className="absolute top-0 left-4 h-full w-px bg-black/10 md:left-1/2 md:-translate-x-1/2">
           <div className="timeline-line-fill h-0 w-full bg-accent" />
         </div>
 
-        <div className="relative space-y-20">
+        <div className="relative space-y-12 md:space-y-20">
           {TIMELINE.map((item, i) => (
             <div
               key={item.year}
-              className={`timeline-item relative flex items-center gap-8 ${
-                i % 2 === 0 ? "flex-row" : "flex-row-reverse"
+              className={`timeline-item relative flex gap-4 pl-10 md:items-center md:gap-8 md:pl-0 ${
+                i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
               }`}
             >
               <div
-                className={`w-[calc(50%-2rem)] ${
-                  i % 2 === 0 ? "text-right" : "text-left"
+                className={`w-full md:w-[calc(50%-2rem)] ${
+                  i % 2 === 0 ? "md:text-right" : "md:text-left"
                 }`}
               >
-                <span className="font-display text-3xl font-bold text-accent md:text-4xl">
+                <span className="font-display text-2xl font-bold text-accent sm:text-3xl md:text-4xl">
                   {item.year}
                 </span>
-                <h3 className="mt-2 font-display text-xl font-semibold text-black">{item.label}</h3>
+                <h3 className="mt-1 font-display text-lg font-semibold text-black sm:mt-2 sm:text-xl">
+                  {item.label}
+                </h3>
                 <p className="mt-1 text-sm text-black/45">{item.detail}</p>
               </div>
 
-              <div className="timeline-dot absolute left-1/2 z-10 h-4 w-4 -translate-x-1/2 rounded-full border-2 border-accent bg-white shadow-[0_0_0_6px_rgba(201,162,39,0.15)] transition-transform duration-500 hover:scale-125" />
+              <div className="timeline-dot absolute top-1 left-4 z-10 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-accent bg-white shadow-[0_0_0_6px_rgba(201,162,39,0.15)] transition-transform duration-500 hover:scale-125 md:top-1/2 md:left-1/2 md:h-4 md:w-4 md:-translate-x-1/2 md:-translate-y-1/2" />
 
-              <div className="w-[calc(50%-2rem)]" />
+              <div className="hidden w-[calc(50%-2rem)] md:block" />
             </div>
           ))}
         </div>
