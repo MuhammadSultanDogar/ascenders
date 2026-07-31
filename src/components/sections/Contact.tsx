@@ -73,16 +73,11 @@ export default function Contact() {
     setError(null);
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const { submitContactForm } = await import("@/lib/contact-form");
+      const result = await submitContactForm(form, COMPANY.email);
 
-      const data = (await res.json()) as { error?: string; needsActivation?: boolean };
-
-      if (!res.ok) {
-        setError(data.error ?? "Failed to send message. Please try again.");
+      if (!result.ok) {
+        setError(result.error);
         return;
       }
 

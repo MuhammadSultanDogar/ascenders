@@ -36,7 +36,7 @@ export const COMPANY = {
 } as const;
 
 export const SITE = {
-  url: "https://eascenders.com",
+  url: "https://www.eascenders.com",
   title: "Ascenders IT Solutions LLC",
   description:
     "Premium digital marketing, ecommerce marketplace management, reinstatements, and Go High Level automation. Serving brands across USA, UK & Australia since 2015.",
