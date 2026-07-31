@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { gsap, useGSAP, registerGSAP } from "@/lib/gsap";
+import { scrollReveal, scrollRevealLines } from "@/lib/scroll-animations";
 import { TIMELINE, COMPANY } from "@/lib/constants";
 import SectionDecor from "@/components/ui/SectionDecor";
 
@@ -12,37 +13,38 @@ export default function About() {
     () => {
       registerGSAP();
 
-      gsap.from(".about-headline-word", {
-        y: "100%",
-        stagger: 0.06,
-        duration: 1,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: ".about-intro",
-          start: "top 70%",
-        },
+      scrollReveal(".about-eyebrow", {
+        trigger: ".about-intro",
+        y: 20,
+        duration: 0.65,
+      });
+
+      scrollRevealLines(".about-headline-word", ".about-intro", 0.06);
+
+      scrollReveal(".about-body", {
+        trigger: ".about-intro",
+        y: 32,
+        duration: 0.85,
+        delay: 0.12,
       });
 
       gsap.utils.toArray<HTMLElement>(".timeline-item").forEach((item, i) => {
-        gsap.from(item, {
-          y: 36,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: item,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
+        scrollReveal(item, {
+          trigger: item,
+          start: "top 90%",
+          y: 40,
+          duration: 0.9,
+          delay: i * 0.04,
         });
 
         gsap.from(item.querySelector(".timeline-dot"), {
           scale: 0,
-          duration: 0.6,
+          duration: 0.55,
           ease: "back.out(2)",
           scrollTrigger: {
             trigger: item,
-            start: "top 80%",
+            start: "top 88%",
+            toggleActions: "play none none none",
           },
         });
       });
@@ -52,9 +54,9 @@ export default function About() {
         ease: "none",
         scrollTrigger: {
           trigger: ".timeline-track",
-          start: "top 60%",
-          end: "bottom 40%",
-          scrub: 1,
+          start: "top 75%",
+          end: "bottom 35%",
+          scrub: 0.6,
         },
       });
     },
@@ -71,7 +73,7 @@ export default function About() {
     >
       <SectionDecor variant="teal" />
       <div className="about-intro relative mx-auto max-w-7xl">
-        <span className="text-xs tracking-[0.35em] text-accent uppercase">
+        <span className="about-eyebrow text-xs tracking-[0.35em] text-accent uppercase">
           About Us
         </span>
 
@@ -85,7 +87,7 @@ export default function About() {
           ))}
         </div>
 
-        <p className="mt-8 max-w-2xl text-base leading-relaxed text-black/55 md:mt-10 md:text-lg">
+        <p className="about-body mt-8 max-w-2xl text-base leading-relaxed text-black/55 md:mt-10 md:text-lg">
           Founded in 2015 in Multan, Pakistan, {COMPANY.name} has grown from a
           single vision into a global force — expanding into multiple ventures
           with offices across UAE, Lahore, and Multan, serving clients in the USA,

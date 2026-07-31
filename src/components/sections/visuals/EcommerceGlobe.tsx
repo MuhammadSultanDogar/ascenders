@@ -3,6 +3,11 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { PARTNER_BRANDS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+
+type EcommerceGlobeProps = {
+  className?: string;
+};
 
 const GLOBE_RADIUS = 1.05;
 const WIDE_LOGOS = new Set(["amazon", "walmart", "gohighlevel"]);
@@ -145,7 +150,7 @@ async function createBrandSprite(slug: string) {
   return sprite;
 }
 
-export default function EcommerceGlobe() {
+export default function EcommerceGlobe({ className }: EcommerceGlobeProps = {}) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -321,7 +326,10 @@ export default function EcommerceGlobe() {
   return (
     <div
       ref={wrapRef}
-      className="ecommerce-globe relative h-[min(260px,42vw)] w-[min(260px,42vw)] sm:h-[min(320px,48vw)] sm:w-[min(320px,48vw)] lg:h-[min(380px,52vh)] lg:w-[min(380px,52vh)]"
+      className={cn(
+        "ecommerce-globe relative h-[min(260px,42vw)] w-[min(260px,42vw)] sm:h-[min(320px,48vw)] sm:w-[min(320px,48vw)] lg:h-[min(380px,52vh)] lg:w-[min(380px,52vh)]",
+        className,
+      )}
     >
       <div
         className="pointer-events-none absolute inset-[10%] rounded-full bg-[radial-gradient(circle,rgba(0,0,0,0.04)_0%,transparent_72%)]"

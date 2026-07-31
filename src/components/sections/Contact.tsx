@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { IconMail, IconPhone, IconInstagram, IconFacebook, IconLinkedin } from "@/components/ui/Icons";
 import { gsap, useGSAP, registerGSAP } from "@/lib/gsap";
+import { scrollReveal, scrollRevealLines } from "@/lib/scroll-animations";
 import { COMPANY, SOCIALS } from "@/lib/constants";
 import MagneticButton from "@/components/ui/MagneticButton";
 import SectionDecor from "@/components/ui/SectionDecor";
@@ -32,26 +33,30 @@ export default function Contact() {
     () => {
       registerGSAP();
 
-      gsap.from(".contact-headline-line", {
-        y: "100%",
-        stagger: 0.1,
-        duration: 1.1,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-        },
+      scrollRevealLines(".contact-headline-line", sectionRef.current, 0.1);
+
+      scrollReveal(".contact-info", {
+        trigger: sectionRef.current,
+        y: 36,
+        duration: 0.85,
       });
 
-      gsap.from(".contact-form", {
-        y: 48,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 70%",
-        },
+      scrollReveal(".contact-form", {
+        trigger: sectionRef.current,
+        start: "top 88%",
+        y: 52,
+        scale: 0.98,
+        duration: 1,
+      });
+
+      gsap.utils.toArray<HTMLElement>(".contact-social-link").forEach((link, i) => {
+        scrollReveal(link, {
+          trigger: link,
+          start: "top 95%",
+          y: 20,
+          duration: 0.65,
+          delay: i * 0.05,
+        });
       });
     },
     { scope: sectionRef },
@@ -96,7 +101,7 @@ export default function Contact() {
     >
       <SectionDecor variant="blue" />
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-24">
-        <div>
+        <div className="contact-info">
           {["LET'S", "BUILD", "SOMETHING", "GREAT."].map((line) => (
             <div key={line} className="overflow-hidden">
               <h2 className="contact-headline-line headline-display text-[clamp(1.75rem,8vw,4.5rem)] uppercase">
@@ -138,7 +143,7 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor="hover"
-                className="glass flex h-11 w-11 items-center justify-center rounded-full text-black transition-colors hover:border-accent/50 md:h-12 md:w-12"
+                className="contact-social-link glass flex h-11 w-11 items-center justify-center rounded-full text-black transition-colors hover:border-accent/50 md:h-12 md:w-12"
               >
                 <Icon className="h-4 w-4" />
               </a>

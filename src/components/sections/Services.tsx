@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { gsap, useGSAP, registerGSAP } from "@/lib/gsap";
+import { panelEnterTimeline } from "@/lib/scroll-animations";
 import { SERVICES } from "@/lib/constants";
 import MagneticButton from "@/components/ui/MagneticButton";
 import ServiceScene from "@/components/sections/visuals/ServiceScene";
@@ -21,66 +22,26 @@ export default function Services() {
     () => {
       registerGSAP();
 
-      const mm = gsap.matchMedia();
       const panels = gsap.utils.toArray<HTMLElement>(".service-panel");
 
-      mm.add("(min-width: 1024px)", () => {
-        panels.forEach((panel, i) => {
-          if (i === panels.length - 1) return;
-
-          gsap.to(panel, {
-            scale: 0.96,
-            opacity: 0.3,
-            scrollTrigger: {
-              trigger: panel,
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
-            },
-          });
-        });
-      });
-
       panels.forEach((panel) => {
-        gsap.from(panel.querySelectorAll(".service-headline-line"), {
-          y: "100%",
-          stagger: 0.08,
-          duration: 1,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: panel,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-        });
+        panelEnterTimeline(panel);
+      });
 
-        gsap.from(panel.querySelectorAll(".service-scene-wrap"), {
-          y: 48,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: panel,
-            start: "top 82%",
-            toggleActions: "play none none reverse",
-          },
-        });
+      panels.forEach((panel, i) => {
+        if (i === panels.length - 1) return;
 
-        gsap.from(panel.querySelectorAll(".service-item"), {
-          x: -24,
-          opacity: 0,
-          stagger: 0.06,
-          duration: 0.8,
-          ease: "power3.out",
+        gsap.to(panel, {
+          scale: 0.97,
+          opacity: 0.35,
           scrollTrigger: {
             trigger: panel,
-            start: "top 78%",
-            toggleActions: "play none none reverse",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
           },
         });
       });
-
-      return () => mm.revert();
     },
     { scope: sectionRef },
   );
@@ -90,31 +51,31 @@ export default function Services() {
       {SERVICES.map((service) => (
         <div
           key={service.id}
-          className="service-panel border-b border-black/[0.04] bg-white py-14 last:border-b-0 sm:py-16 lg:sticky lg:top-0 lg:min-h-screen lg:border-b-0 lg:py-24"
+          className="service-panel sticky top-0 flex min-h-[100svh] items-center overflow-hidden bg-white py-12 sm:py-14 lg:py-24"
         >
           <SectionDecor variant={SERVICE_DECOR[service.id] ?? "gold"} showShape={service.id !== "ecommerce"} />
-          <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-5 sm:gap-10 sm:px-6 md:px-12 lg:grid-cols-12 lg:items-center lg:gap-16">
+          <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-5 sm:gap-8 sm:px-6 md:px-12 lg:grid-cols-12 lg:gap-16">
             <div className="relative z-10 lg:col-span-6">
-              <span className="font-display text-xs font-semibold tracking-[0.2em] text-accent uppercase sm:text-sm sm:tracking-[0.28em]">
+              <span className="service-accent font-display text-xs font-semibold tracking-[0.2em] text-accent uppercase sm:text-sm sm:tracking-[0.28em]">
                 {service.accent} — {service.title}
               </span>
 
-              <div className="mt-4 space-y-0.5 sm:mt-6 sm:space-y-1">
+              <div className="mt-3 space-y-0.5 sm:mt-6 sm:space-y-1">
                 {service.headline.map((line) => (
                   <div key={line} className="overflow-hidden">
-                    <h2 className="service-headline-line headline-display text-[clamp(1.875rem,7.5vw,5.5rem)] uppercase">
+                    <h2 className="service-headline-line headline-display text-[clamp(1.75rem,7.5vw,5.5rem)] uppercase">
                       {line}
                     </h2>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-5 max-w-xl text-sm leading-relaxed text-black/55 sm:mt-8 sm:text-base">
+              <p className="service-desc mt-4 max-w-xl text-sm leading-relaxed text-black/55 sm:mt-8 sm:text-base">
                 {service.description}
               </p>
 
               {service.items.length > 0 && (
-                <ul className="mt-6 space-y-2.5 sm:mt-10 sm:space-y-3">
+                <ul className="mt-5 space-y-2 sm:mt-10 sm:space-y-3">
                   {service.items.map((item) => (
                     <li
                       key={item}
@@ -127,7 +88,7 @@ export default function Services() {
                 </ul>
               )}
 
-              <div className="mt-8 sm:mt-12">
+              <div className="service-cta mt-6 sm:mt-12">
                 <MagneticButton href="#contact" variant="outline">
                   Get Started
                 </MagneticButton>
@@ -140,6 +101,8 @@ export default function Services() {
               </div>
             </div>
           </div>
+
+          <div className="pointer-events-none absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-black/8 to-transparent" />
         </div>
       ))}
     </section>

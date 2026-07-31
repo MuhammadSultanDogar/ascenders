@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { IconInstagram, IconFacebook, IconLinkedin } from "@/components/ui/Icons";
 import { gsap, useGSAP, registerGSAP, ScrollTrigger } from "@/lib/gsap";
+import { scrollReveal, scrollRevealLines } from "@/lib/scroll-animations";
 import { SOCIALS } from "@/lib/constants";
 import SectionDecor from "@/components/ui/SectionDecor";
 
@@ -17,7 +18,7 @@ function LazyInstagramEmbed({ src, title, href }: { src: string; title: string; 
 
       ScrollTrigger.create({
         trigger: ref.current,
-        start: "top 90%",
+        start: "top 92%",
         once: true,
         onEnter: () => setActive(true),
       });
@@ -26,7 +27,7 @@ function LazyInstagramEmbed({ src, title, href }: { src: string; title: string; 
   );
 
   return (
-    <div ref={ref} className="social-embed overflow-hidden rounded-2xl border border-black/8 bg-white shadow-sm">
+    <div ref={ref} className="social-reel overflow-hidden rounded-2xl border border-black/8 bg-white shadow-sm">
       <div className="flex items-center gap-2 border-b border-black/5 px-4 py-3">
         <IconInstagram className="h-4 w-4 text-[#E1306C]" />
         <span className="text-xs tracking-widest text-black/50 uppercase">Instagram Reel</span>
@@ -66,27 +67,47 @@ export default function SocialWall() {
     () => {
       registerGSAP();
 
-      gsap.from(".social-headline-line", {
-        y: "100%",
-        stagger: 0.08,
-        duration: 1,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 70%",
-        },
+      scrollReveal(".social-eyebrow", {
+        trigger: sectionRef.current,
+        y: 20,
+        duration: 0.65,
       });
 
-      gsap.from(".social-embed", {
-        y: 60,
-        opacity: 0,
-        stagger: 0.15,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".social-grid",
-          start: "top 75%",
-        },
+      scrollRevealLines(".social-headline-line", sectionRef.current, 0.08);
+
+      scrollReveal(".social-sub", {
+        trigger: sectionRef.current,
+        y: 28,
+        duration: 0.8,
+        delay: 0.1,
+      });
+
+      gsap.utils.toArray<HTMLElement>(".social-reel").forEach((el, i) => {
+        scrollReveal(el, {
+          trigger: el,
+          start: "top 92%",
+          y: 52,
+          scale: 0.97,
+          duration: 0.95,
+          delay: i * 0.1,
+        });
+      });
+
+      scrollReveal(".social-linkedin-card", {
+        trigger: ".social-linkedin-card",
+        start: "top 92%",
+        y: 48,
+        duration: 0.95,
+      });
+
+      gsap.utils.toArray<HTMLElement>(".social-chip").forEach((chip, i) => {
+        scrollReveal(chip, {
+          trigger: chip,
+          start: "top 95%",
+          y: 24,
+          duration: 0.7,
+          delay: i * 0.06,
+        });
       });
     },
     { scope: sectionRef },
@@ -100,7 +121,7 @@ export default function SocialWall() {
       <SectionDecor variant="purple" />
 
       <div className="relative mx-auto max-w-7xl">
-        <span className="text-xs tracking-[0.35em] text-accent uppercase">
+        <span className="social-eyebrow text-xs tracking-[0.35em] text-accent uppercase">
           Social
         </span>
 
@@ -114,7 +135,7 @@ export default function SocialWall() {
           ))}
         </div>
 
-        <p className="mt-8 max-w-lg text-black/50">
+        <p className="social-sub mt-8 max-w-lg text-black/50">
           Watch our latest reels and connect with Ascenders across Instagram and LinkedIn.
         </p>
 
@@ -131,7 +152,7 @@ export default function SocialWall() {
           />
         </div>
 
-        <div className="social-embed mt-8 overflow-hidden rounded-2xl border border-black/8 bg-white shadow-sm">
+        <div className="social-linkedin-card mt-8 overflow-hidden rounded-2xl border border-black/8 bg-white shadow-sm">
           <div className="flex items-center gap-2 border-b border-black/5 px-4 py-3">
             <IconLinkedin className="h-4 w-4 text-[#0A66C2]" />
             <span className="text-xs tracking-widest text-black/50 uppercase">LinkedIn</span>
@@ -173,7 +194,7 @@ export default function SocialWall() {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="hover"
-              className="glass flex items-center gap-3 rounded-full px-6 py-3 text-sm tracking-wide transition-colors hover:border-accent/50"
+              className="social-chip glass flex items-center gap-3 rounded-full px-6 py-3 text-sm tracking-wide transition-colors hover:border-accent/50"
             >
               <Icon className="h-4 w-4 text-accent" />
               {label}

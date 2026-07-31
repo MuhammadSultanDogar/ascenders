@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { IconInstagram } from "@/components/ui/Icons";
 import { gsap, useGSAP, registerGSAP, ScrollTrigger } from "@/lib/gsap";
+import { scrollReveal, scrollRevealLines } from "@/lib/scroll-animations";
 import { PORTFOLIO } from "@/lib/constants";
 import SectionDecor from "@/components/ui/SectionDecor";
 
@@ -77,27 +78,30 @@ export default function Portfolio() {
     () => {
       registerGSAP();
 
-      gsap.from(".portfolio-headline", {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-        },
+      scrollReveal(".portfolio-eyebrow", {
+        trigger: sectionRef.current,
+        y: 20,
+        duration: 0.7,
       });
 
-      gsap.from(".portfolio-card", {
-        y: 50,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".portfolio-grid",
-          start: "top 80%",
-        },
+      scrollRevealLines(".portfolio-title-line", sectionRef.current, 0.08);
+
+      scrollReveal(".portfolio-sub", {
+        trigger: sectionRef.current,
+        y: 24,
+        duration: 0.75,
+        delay: 0.15,
+      });
+
+      gsap.utils.toArray<HTMLElement>(".portfolio-card").forEach((card, i) => {
+        scrollReveal(card, {
+          trigger: card,
+          start: "top 92%",
+          y: 48,
+          scale: 0.96,
+          duration: 0.9,
+          delay: (i % 2) * 0.08,
+        });
       });
     },
     { scope: sectionRef },
@@ -113,13 +117,15 @@ export default function Portfolio() {
 
       <div className="relative mx-auto max-w-6xl">
         <div className="portfolio-headline mb-12 md:mb-16">
-          <span className="text-xs tracking-[0.35em] text-accent uppercase">
+          <span className="portfolio-eyebrow text-xs tracking-[0.35em] text-accent uppercase">
             Selected Work
           </span>
-          <h2 className="headline-display mt-4 text-[clamp(2rem,5vw,4rem)] uppercase">
-            Portfolio
-          </h2>
-          <p className="mt-4 max-w-lg text-sm text-black/50">
+          <div className="mt-4 overflow-hidden">
+            <h2 className="portfolio-title-line headline-display text-[clamp(2rem,5vw,4rem)] uppercase">
+              Portfolio
+            </h2>
+          </div>
+          <p className="portfolio-sub mt-4 max-w-lg text-sm text-black/50">
             Recent highlights from our Instagram — client wins, campaigns, and growth stories.
           </p>
         </div>

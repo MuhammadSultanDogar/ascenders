@@ -11,7 +11,7 @@ import SectionDecor from "@/components/ui/SectionDecor";
 const EcommerceGlobe = dynamic(() => import("@/components/sections/visuals/EcommerceGlobe"), {
   ssr: false,
   loading: () => (
-    <div className="hidden h-[min(380px,52vh)] w-[min(380px,52vh)] animate-pulse rounded-full bg-black/[0.04] lg:block" />
+    <div className="h-[min(300px,78vw)] w-[min(300px,78vw)] animate-pulse rounded-full bg-black/[0.04] lg:h-[min(380px,52vh)] lg:w-[min(380px,52vh)]" />
   ),
 });
 
@@ -28,6 +28,7 @@ export default function Hero() {
         .from(".hero-line", { y: "110%", duration: 1.1, stagger: 0.12 }, "-=0.55")
         .from(".hero-sub", { opacity: 0, y: 20, duration: 0.8 }, "-=0.4")
         .from(".hero-cta", { opacity: 0, y: 20, duration: 0.8 }, "-=0.5")
+        .from(".hero-globe-mobile", { opacity: 0, scale: 0.92, x: 48, duration: 1.15 }, "-=0.85")
         .from(".hero-globe-wrap", { opacity: 0, scale: 0.88, y: 30, duration: 1.2 }, "-=0.9");
 
       const mm = gsap.matchMedia();
@@ -67,17 +68,17 @@ export default function Hero() {
             scrub: 1,
           },
         });
+      });
 
-        gsap.to(".hero-globe-wrap", {
-          y: -50,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: 1.2,
-          },
-        });
+      gsap.to(".hero-globe-wrap, .hero-globe-mobile", {
+        y: -36,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.1,
+        },
       });
 
       return () => mm.revert();
@@ -86,10 +87,8 @@ export default function Hero() {
   );
 
   useEffect(() => {
-    if (!sectionRef.current?.querySelector(".hero-globe-wrap")) return;
-
     gsap.to(".hero-globe-float", {
-      y: "+=10",
+      y: "+=8",
       duration: 4,
       repeat: -1,
       yoyo: true,
@@ -101,9 +100,9 @@ export default function Hero() {
     <section
       id="home"
       ref={sectionRef}
-      className="hero-bg relative min-h-[100svh] overflow-x-clip bg-bg lg:min-h-[110vh]"
+      className="hero-bg relative min-h-[110vh] overflow-x-clip bg-bg"
     >
-      <div className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-24 pb-16 lg:sticky lg:top-0 lg:h-screen lg:px-0 lg:pt-0 lg:pb-0">
+      <div className="relative sticky top-0 flex min-h-[100svh] flex-col justify-center overflow-hidden px-6 pt-24 pb-16 lg:h-screen lg:px-0 lg:pt-0 lg:pb-0">
         <SectionDecor variant="gold" showShape={false} />
 
         <div className="pointer-events-none absolute top-0 right-0 hidden h-full w-px bg-gradient-to-b from-transparent via-accent/30 to-transparent lg:block" aria-hidden="true" />
@@ -115,8 +114,15 @@ export default function Hero() {
           </span>
         </div>
 
-        <div className="hero-content relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:px-12">
-          <div className="w-full max-w-3xl">
+        {/* Mobile: half globe peeking from the right edge */}
+        <div className="hero-globe-mobile absolute top-[32%] right-0 z-0 translate-x-1/2 -translate-y-1/2 lg:hidden">
+          <div className="hero-globe-float">
+            <EcommerceGlobe className="!h-[min(300px,78vw)] !w-[min(300px,78vw)] [&_p]:hidden" />
+          </div>
+        </div>
+
+        <div className="hero-content relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:px-12">
+          <div className="relative z-10 w-full max-w-3xl">
             <div className="hero-logo mb-6 md:mb-10">
               <Image
                 src={LOGO.src}
@@ -138,7 +144,7 @@ export default function Hero() {
               ))}
             </div>
 
-            <p className="hero-sub mt-5 max-w-xl text-left text-sm leading-relaxed tracking-wide text-black/55 sm:mt-6 md:mt-8 md:text-base">
+            <p className="hero-sub mt-6 max-w-xl text-left text-sm leading-relaxed tracking-wide text-black/55 md:mt-8 md:text-base">
               {COMPANY.tagline}. Premium ecommerce, marketing & automation for brands
               scaling across{" "}
               {MARKETS.map((m, i) => (
