@@ -35,13 +35,13 @@ export default function Hero() {
 
       mm.add("(max-width: 1023px)", () => {
         gsap.to(".hero-content", {
-          y: -36,
+          y: -24,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top top",
             end: "bottom top",
-            scrub: 0.8,
+            scrub: 0.45,
           },
         });
       });
@@ -71,13 +71,13 @@ export default function Hero() {
       });
 
       gsap.to(".hero-globe-wrap, .hero-globe-mobile", {
-        y: -36,
+        y: -24,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 1.1,
+          scrub: 0.5,
         },
       });
 
@@ -102,7 +102,7 @@ export default function Hero() {
       ref={sectionRef}
       className="hero-bg relative min-h-[110vh] overflow-x-clip bg-bg"
     >
-      <div className="relative sticky top-0 flex min-h-[100svh] flex-col justify-center overflow-hidden px-6 pt-24 pb-16 lg:h-screen lg:px-0 lg:pt-0 lg:pb-0">
+      <div className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-24 pb-16 lg:sticky lg:top-0 lg:h-screen lg:px-0 lg:pt-0 lg:pb-0">
         <SectionDecor variant="gold" showShape={false} />
 
         <div className="pointer-events-none absolute top-0 right-0 hidden h-full w-px bg-gradient-to-b from-transparent via-accent/30 to-transparent lg:block" aria-hidden="true" />

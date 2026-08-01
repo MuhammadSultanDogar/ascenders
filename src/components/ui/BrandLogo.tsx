@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 const BRAND_META: Record<string, { label: string; wide?: boolean }> = {
   amazon: { label: "Amazon", wide: true },
   walmart: { label: "Walmart", wide: true },
-  ebay: { label: "eBay" },
+  ebay: { label: "eBay", wide: true },
   shopify: { label: "Shopify" },
   tiktok: { label: "TikTok" },
   meta: { label: "Meta" },

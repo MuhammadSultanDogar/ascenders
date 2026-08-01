@@ -61,8 +61,28 @@ body {
 }
 
 @media (max-width: 1023px) {
-  html {
+  html.mobile-native-scroll {
     scroll-behavior: auto;
+  }
+
+  .service-panel {
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  @keyframes scroll-hint-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(5px);
+    }
+  }
+
+  .scroll-hint-arrow {
+    animation: scroll-hint-bounce 1.5s ease-in-out infinite;
   }
 
   .headline-display {

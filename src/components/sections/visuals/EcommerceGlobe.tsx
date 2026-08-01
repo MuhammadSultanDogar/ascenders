@@ -162,13 +162,16 @@ export default function EcommerceGlobe({ className }: EcommerceGlobeProps = {}) 
     let disposed = false;
     const textures: THREE.Texture[] = [];
 
+    const isMobile = window.innerWidth < 1024;
+    const sphereSegments = isMobile ? 32 : 48;
+
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha: true,
-      antialias: true,
+      antialias: !isMobile,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.35 : 2));
     renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
@@ -179,7 +182,7 @@ export default function EcommerceGlobe({ className }: EcommerceGlobeProps = {}) 
     scene.add(globe);
 
     const sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(GLOBE_RADIUS * 0.92, 48, 48),
+      new THREE.SphereGeometry(GLOBE_RADIUS * 0.92, sphereSegments, sphereSegments),
       new THREE.MeshBasicMaterial({
         color: 0x111111,
         transparent: true,
@@ -189,7 +192,7 @@ export default function EcommerceGlobe({ className }: EcommerceGlobeProps = {}) 
     globe.add(sphere);
 
     const gloss = new THREE.Mesh(
-      new THREE.SphereGeometry(GLOBE_RADIUS * 0.925, 48, 48),
+      new THREE.SphereGeometry(GLOBE_RADIUS * 0.925, sphereSegments, sphereSegments),
       new THREE.MeshBasicMaterial({
         color: 0xffffff,
         transparent: true,

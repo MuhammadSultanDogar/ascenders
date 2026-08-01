@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger, registerGSAP } from "@/lib/gsap";
 
@@ -9,16 +9,18 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+function isTouchDevice() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
 export default function SmoothScrollProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const lenisRef = useRef<Lenis | null>(null);
-
   useEffect(() => {
     registerGSAP();
-
     ScrollTrigger.config({ ignoreMobileResize: true });
 
     if (prefersReducedMotion()) {
@@ -26,18 +28,28 @@ export default function SmoothScrollProvider({
       return;
     }
 
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    const touch = isTouchDevice();
+
+    if (touch) {
+      document.documentElement.classList.add("mobile-native-scroll");
+      ScrollTrigger.refresh();
+
+      const refresh = () => ScrollTrigger.refresh();
+      window.addEventListener("orientationchange", refresh);
+
+      return () => {
+        window.removeEventListener("orientationchange", refresh);
+        document.documentElement.classList.remove("mobile-native-scroll");
+      };
+    }
 
     const lenis = new Lenis({
-      duration: isTouch ? 0.95 : 1.05,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 1.05,
+      lerp: 0.1,
       smoothWheel: true,
-      syncTouch: isTouch,
-      touchMultiplier: 1.35,
+      syncTouch: false,
       wheelMultiplier: 0.9,
     });
-
-    lenisRef.current = lenis;
 
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -74,12 +86,10 @@ export default function SmoothScrollProvider({
 
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener("orientationchange", refresh);
-    window.addEventListener("load", refresh);
     requestAnimationFrame(refresh);
 
     return () => {
       window.removeEventListener("orientationchange", refresh);
-      window.removeEventListener("load", refresh);
       ScrollTrigger.removeEventListener("refresh", onRefresh);
       gsap.ticker.remove(raf);
       lenis.destroy();

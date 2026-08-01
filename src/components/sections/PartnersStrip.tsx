@@ -3,7 +3,7 @@
 import { PARTNER_BRANDS } from "@/lib/constants";
 import BrandLogo from "@/components/ui/BrandLogo";
 
-const WIDE_SLUGS = new Set(["amazon", "walmart", "gohighlevel"]);
+const WIDE_SLUGS = new Set(["amazon", "walmart", "ebay", "gohighlevel"]);
 
 export default function PartnersStrip() {
   const items = [...PARTNER_BRANDS, ...PARTNER_BRANDS];
@@ -19,13 +19,13 @@ export default function PartnersStrip() {
         </p>
       </div>
 
-      <div className="overflow-hidden">
+      <div className="overflow-hidden px-6 md:px-12">
         <div className="flex w-max animate-[marquee_45s_linear_infinite] items-center gap-10 md:gap-14">
           {items.map((brand, i) => (
             <div
               key={`${brand.slug}-${i}`}
               className={`flex h-14 shrink-0 items-center justify-center rounded-xl border border-black/5 bg-bg px-5 transition-all duration-500 hover:border-accent/30 hover:shadow-md ${
-                WIDE_SLUGS.has(brand.slug) ? "w-[7.5rem]" : "w-[5.5rem]"
+                WIDE_SLUGS.has(brand.slug) ? "w-[8rem] md:w-[8.5rem]" : "w-[5.5rem]"
               }`}
             >
               <BrandLogo slug={brand.slug} name={brand.name} />
